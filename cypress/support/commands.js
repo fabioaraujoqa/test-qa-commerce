@@ -38,21 +38,25 @@ Cypress.Commands.add("token", (email, senha) => {
   });
 });
 
-Cypress.Commands.add('cadastrarUsuarioApi', (nome, email, senha, admin) => { 
+Cypress.Commands.add("cadastrarUsuarioApi", (nome, email, senha, admin) => {
   cy.api({
-    method: 'POST', 
-    url: 'api/users', 
+    method: "POST",
+    url: "api/users",
     body: {
-        "name": nome,
-        "email": email,
-        "password": senha,
-        "isAdmin": admin
-      }
-  }).then((response) =>{
-    expect(response.status).to.equal(200)
-  }) 
- })
+      name: nome,
+      email: email,
+      password: senha,
+      isAdmin: admin,
+    },
+  }).then((response) => {
+    expect(response.status).to.equal(201);
+    return response.body.id;
+  });
+});
 
-
-
- 
+Cypress.Commands.add("limparCarrinho", () => {
+  cy.request({
+    method: "DELETE",
+    url: "api/carrinho/1",
+  });
+});

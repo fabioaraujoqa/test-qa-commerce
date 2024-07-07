@@ -9,7 +9,7 @@ describe('Teste API - Funcionalidade: Usuário', () => {
         })
     });
     
-    it('GET - Deve listar usuários com sucesso', () => {
+    it('GET - Deve listar usuários com sucesso e validar contrato', () => {
         cy.api({
             method: 'GET', 
             url: 'api/users'
@@ -40,38 +40,40 @@ describe('Teste API - Funcionalidade: Usuário', () => {
     });
 
     it('PUT - Deve atualizar um usuário com sucesso', () => {
-        let email = Date.now() + '@teste.com'
-        cy.api({
-            method: 'PUT', 
-            url : 'api/users/26', 
-            headers: {
-                Authorization: token
-            },
-            body: {
-                "name": "Teste update",
-                "email": email,
-                "password": "Teste@123",
-                "isAdmin": true
-              }
-        }).then((response) =>{
-            expect(response.status).to.equal(200)
-            expect(response.body.message).to.contain('Usuário atualizado com sucesso.')
+        let email = `${Date.now()}@teste.com`
+        cy.cadastrarUsuarioApi('nome para alterar' , email, 'Teste@123', false).then((id) =>{
+            let emailPut = `${Date.now()}@teste_alterado.com`
+            cy.api({
+                method: 'PUT', 
+                url : `api/users/${id}` ,  
+                headers: {
+                    Authorization: token
+                },
+                body: {
+                    "name": "nome alterado",
+                    "email": emailPut,
+                    "password": "Teste@123",
+                    "isAdmin": true
+                  }
+            }).then((response) =>{
+                expect(response.status).to.equal(200)
+                expect(response.body.message).to.contain('Usuário atualizado com sucesso.')
+            })
         })
     });
 
-    it.skip('DELETE - Deve deletar um usuário com sucesso', () => {
-        cy.cadastrarUsuarioApi('Para deletar' , 'email@deletar.com', 'Teste@123', false)
-        //TODO melhorar a sequencia de teste do DELETE e PUT
-        cy.api({
-            method: 'DELETE', 
-            url: 'api/users/' + id,
-            headers: {
-                Authorization: token
-            },
-        }).then((response) =>{
-            expect(response.status).to.equal(200)
-            expect(response.body).to.contain('Usuário deletado com sucesso.')
+    it('DELETE - Deve deletar um usuário com sucesso', () => {
+        cy.cadastrarUsuarioApi('Para deletar' , 'email@delete.com', 'Teste@123', false).then((id) =>{
+            cy.api({
+                method: 'DELETE', 
+                url: 'api/users/' + id,
+                headers: {
+                    Authorization: token
+                }
+            }).then((response) =>{
+                expect(response.status).to.equal(200)
+                expect(response.body.message).to.contain('Usuário deletado com sucesso.')
+            })
         })
     });
-
 });

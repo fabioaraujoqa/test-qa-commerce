@@ -4,7 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "cy-dash": "npx cypress run --record --key e14788f2-baf8-4a9a-a0f8-59cd1833bbac",
+    "cy-run": "npx cypress run --browser chrome"
   },
   "keywords": [],
   "author": "",
@@ -14,6 +15,8 @@
     "cypress-plugin-api": "^2.11.1"
   },
   "devDependencies": {
-    "@faker-js/faker": "^8.4.1"
+    "@faker-js/faker": "^8.4.1",
+    "allure-commandline": "^2.29.0",
+    "allure-cypress": "^3.0.0-beta.6"
   }
 }
